@@ -1,222 +1,201 @@
-import React, { useState } from "react"
+
+import React, { useState } from 'react';
+import { Dimensions, TouchableOpacity, View } from 'react-native';
+
 import {
-  Input,
-  IconButton,
-  Checkbox,
-  Text,
-  Box,
-  VStack,
-  HStack,
-  Heading,
-  Icon,
-  Center,
   NativeBaseProvider,
-  Button,
-  Modal,
-  FormControl,
-  Actionsheet,
+  Box,
+  Text,
+  Pressable,
+  Heading,
+  IconButton,
+  Icon,
+  HStack,
+  Avatar,
+  VStack,
   Spacer,
-  useDisclose,
-} from "native-base"
-import { Feather, Entypo } from "@expo/vector-icons"
+  Fab, 
+} from 'native-base';
+import { SwipeListView } from 'react-native-swipe-list-view';
+import { MaterialIcons, Ionicons, Entypo } from '@expo/vector-icons';
+import { AntDesign } from "@expo/vector-icons"
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
-export function ActionsheetExample() {
-  const { isOpen, onOpen, onClose } = useDisclose()
+export default function App() {
+  const [mode, setMode] = useState('Basic');
+
   return (
-    <>
-      <Button onPress={onOpen}>Actionsheet</Button>
-      <Actionsheet isOpen={isOpen} onClose={onClose}>
-        <Actionsheet.Content>
-          <Box w="100%" h={60} px={4} justifyContent="center">
-            <Text
-              fontSize="16"
-              color="gray.500"
-              _dark={{
-                color: "gray.300",
-              }}
-            >
-              Albums
-            </Text>
-          </Box>
-          <Actionsheet.Item>Delete</Actionsheet.Item>
-          <Actionsheet.Item>Share</Actionsheet.Item>
-          <Actionsheet.Item>Play</Actionsheet.Item>
-          <Actionsheet.Item>Favourite</Actionsheet.Item>
-          <Actionsheet.Item>Cancel</Actionsheet.Item>
-        </Actionsheet.Content>
-      </Actionsheet>
-    </>
-  )
+  <Box bg="white" flex="1" safeAreaTop>
+    <Heading p="4" pb="3" size="lg">
+      Inbox
+    </Heading>
+    <Basic />
+  </Box>
+);
 }
 
-export const ExampleButton = () => {
-  const [showModal, setShowModal] = useState(false)
-  return (
-    <>
-      <Button onPress={() => setShowModal(true)}>Button</Button>
-      <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-        <Modal.Content maxWidth="400px">
-          <Modal.CloseButton />
-          <Modal.Header>Contact Us</Modal.Header>
-          <Modal.Body>
-            <FormControl>
-              <FormControl.Label>Name</FormControl.Label>
-              <Input />
-            </FormControl>
-            <FormControl mt="3">
-              <FormControl.Label>Email</FormControl.Label>
-              <Input />
-            </FormControl>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button.Group space={2}>
-              <Button
-                variant="ghost"
-                colorScheme="blueGray"
-                onPress={() => {
-                  setShowModal(false)
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                onPress={() => {
-                  setShowModal(false)
-                }}
-              >
-                Save
-              </Button>
-            </Button.Group>
-          </Modal.Footer>
-        </Modal.Content>
-      </Modal>
-    </>
-  )
-}
-
-export const Example = () => {
-  const instState = [
+function Basic() {
+  const data = [
     {
-      title: "Code",
-      isCompleted: true,
+      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+      fullName: 'Afreen Khan',
+      timeStamp: '12:47 PM',
+      recentText: 'Good Day!',
+      avatarUrl:
+        'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
     },
     {
-      title: "Meeting with team at 9",
-      isCompleted: false,
+      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+      fullName: 'Sujita Mathur',
+      timeStamp: '11:11 PM',
+      recentText: 'Cheer up, there!',
+      avatarUrl:
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyEaZqT3fHeNrPGcnjLLX1v_W4mvBlgpwxnA&usqp=CAU',
     },
     {
-      title: "Check Emails",
-      isCompleted: false,
+      id: '58694a0f-3da1-471f-bd96-145571e29d72',
+      fullName: 'Anci Barroco',
+      timeStamp: '6:22 PM',
+      recentText: 'Good Day!',
+      avatarUrl: 'https://miro.medium.com/max/1400/0*0fClPmIScV5pTLoE.jpg',
     },
     {
-      title: "Write an article",
-      isCompleted: false,
+      id: '68694a0f-3da1-431f-bd56-142371e29d72',
+      fullName: 'Aniket Kumar',
+      timeStamp: '8:56 PM',
+      recentText: 'All the best',
+      avatarUrl:
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSr01zI37DYuR8bMV5exWQBSw28C1v_71CAh8d7GP1mplcmTgQA6Q66Oo--QedAN1B4E1k&usqp=CAU',
     },
-  ]
-  const [list, setList] = React.useState(instState)
-  const [inputValue, setInputValue] = React.useState("")
+    {
+      id: '28694a0f-3da1-471f-bd96-142456e29d72',
+      fullName: 'Kiara',
+      timeStamp: '12:47 PM',
+      recentText: 'I will call today.',
+      avatarUrl:
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBwgu1A5zgPSvfE83nurkuzNEoXs9DMNr8Ww&usqp=CAU',
+    },
+  ];
 
-  const addItem = (title: string) => {
-    setList([
-      ...list,
-      {
-        title: title,
-        isCompleted: false,
-      },
-    ])
-  }
+  const [listData, setListData] = useState(data);
 
-  const handleDelete = (index: number) => {
-    const temp = list.filter((_, itemI) => itemI !== index)
-    setList(temp)
-  }
+  const closeRow = (rowMap, rowKey) => {
+    if (rowMap[rowKey]) {
+      rowMap[rowKey].closeRow();
+    }
+  };
 
-  const handleStatusChange = (index: number) => {
-    const temp = list.map((item, itemI) =>
-      itemI !== index ? item : { ...item, isCompleted: !item.isCompleted }
-    )
-    setList(temp)
-  }
+  const deleteRow = (rowMap, rowKey) => {
+    closeRow(rowMap, rowKey);
+    const newData = [...listData];
+    const prevIndex = listData.findIndex((item) => item.key === rowKey);
+    newData.splice(prevIndex, 1);
+    setListData(newData);
+  };
 
-  return (
+  const onRowDidOpen = (rowKey) => {
+    console.log('This row opened', rowKey);
+  };
+
+  const renderItem = ({ item, index }) => (
     <Box>
-      <Heading >Wednesday</Heading>
-      <VStack mb="5" space={4}>
-        <HStack space={2}>
-          <Input
-            flex={1}
-            onChangeText={(v) => setInputValue(v)}
-            value={inputValue}
-            placeholder="Add Task"
-          />
-          <IconButton
-            borderRadius="sm"
-            variant="solid"
-            icon={
-              <Icon as={Feather} name="plus" size="sm" color="warmGray.50" />
-            }
-            onPress={() => {
-              addItem(inputValue)
-              setInputValue("")
-            }}
-          />
-        </HStack>
-        <VStack space={2}>
-          {list.map((item, itemI) => (
-            <HStack
-              w="100%"
-              justifyContent="space-between"
-              alignItems="center"
-              key={item.title + itemI.toString()}
-            >
-              <Checkbox
-                isChecked={item.isCompleted}
-                onChange={() => handleStatusChange(itemI)}
-                value={item.title}
-              >
-                <Text
-                  mx="2"
-                  strikeThrough={item.isCompleted}
-                  _light={{
-                    color: item.isCompleted ? "gray.400" : "coolGray.800",
-                  }}
-                  _dark={{
-                    color: item.isCompleted ? "gray.400" : "coolGray.50",
-                  }}
-                >
-                  {item.title}
-                </Text>
-              </Checkbox>
-              <IconButton
-                size="sm"
-                colorScheme="trueGray"
-                icon={
-                  <Icon
-                    as={Entypo}
-                    name="minus"
-                    size="xs"
-                    color="trueGray.400"
-                  />
-                }
-                onPress={() => handleDelete(itemI)}
-              />
-            </HStack>
-          ))}
-        </VStack>
-      </VStack>
-      <ExampleButton />
-      <Spacer h="10px" />
-      <ActionsheetExample />
+      <Pressable onPress={() => console.log('You touched me')} bg="white">
+        <Box
+          pl="4"
+          pr="5"
+          py="2"
+          >
+          <HStack alignItems="center" space={3}>
+            <Avatar size="48px" source={{ uri: item.avatarUrl }} />
+            <VStack>
+              <Text color="coolGray.800"  _dark={{ color: 'warmGray.50' }}  bold>
+                {item.fullName}
+              </Text>
+              <Text color="coolGray.600" _dark={{ color: 'warmGray.200' }}>{item.recentText}</Text>
+            </VStack>
+            <Spacer />
+            <Text fontSize="xs" color="coolGray.800"  _dark={{ color: 'warmGray.50' }} alignSelf="flex-start">
+              {item.timeStamp}
+            </Text>
+          </HStack>
+        </Box>
+      </Pressable>
     </Box>
-  )
+  );
+
+  const renderHiddenItem = (data, rowMap) => (
+    <HStack flex="1" pl="2">
+      <Pressable
+        w="70"
+        ml="auto"
+        cursor="pointer"
+        bg="coolGray.200"
+        justifyContent="center"
+        onPress={() => closeRow(rowMap, data.item.key)}
+        _pressed={{
+          opacity: 0.5,
+        }}>
+        <VStack alignItems="center" space={2}>
+          <Icon
+            as={<Entypo name="dots-three-horizontal" />}
+            size="xs"
+            color="coolGray.800"
+          />
+          <Text fontSize="xs" fontWeight="medium" color="coolGray.800">
+            More
+          </Text>
+        </VStack>
+      </Pressable>
+      <Pressable
+        w="70"
+        cursor="pointer"
+        bg="red.500"
+        justifyContent="center"
+        onPress={() => deleteRow(rowMap, data.item.key)}
+        _pressed={{
+          opacity: 0.5,
+        }}>
+        <VStack alignItems="center" space={2}>
+          <Icon as={<MaterialIcons name="delete" />} color="white" size="xs" />
+          <Text color="white" fontSize="xs" fontWeight="medium">
+            Delete
+          </Text>
+        </VStack>
+      </Pressable>
+    </HStack>
+  );
+
+  return (
+    <Box bg="white" safeArea flex="1">
+      <SwipeListView
+        data={listData}
+        renderItem={renderItem}
+        renderHiddenItem={renderHiddenItem}
+        rightOpenValue={-130}
+        previewRowKey={'0'}
+        previewOpenValue={-40}
+        previewOpenDelay={3000}
+        onRowDidOpen={onRowDidOpen}
+      />
+      <FabExample />
+    </Box>
+  );
 }
 
-export default () => {
+export const FabExample = () => {
+  const router = useRouter();
+
   return (
-    <NativeBaseProvider>
-      <Center flex={1} px="3">
-        <Example />
-      </Center>
-    </NativeBaseProvider>
+    <Box position="relative" h={100} w="100%">
+    <Fab
+      position="absolute"
+      size="sm"
+      icon={<Icon color="white" as={<AntDesign name="plus" />} size="sm" />}
+      onPress={() => [
+        router.push('/todos')
+      ]}
+    />
+  </Box>
   )
 }
